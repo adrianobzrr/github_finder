@@ -3,13 +3,16 @@ import Search from '../components/Search'
 import { UserProps } from '../types/user';
 import User from '../components/User';
 import Error from '../components/Error';
+import Loader from '../components/Loader';
 
 const Home = () => {
   const [user, setUser] = useState<UserProps | null>(null);
   const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const loadUser = async (userName: string) => {
 
+    setIsLoading(true);
     setError(false);
     setUser(null);
 
@@ -17,8 +20,12 @@ const Home = () => {
 
     if(res.status === 404){
       setError(true);
+      setIsLoading(false);
+      
       return;
     }
+
+    setIsLoading(false);
     const data = await res.json();
     const {avatar_url, login, location, followers, following} = data;
     const userData: UserProps = {
@@ -36,6 +43,7 @@ const Home = () => {
   return (
     <div>
       <Search loadUser={loadUser}/>
+      {isLoading && <Loader/>}
       {user && 
         <User {...user}/>
       }

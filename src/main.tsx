@@ -4,15 +4,22 @@ import App from './App.tsx'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Home from './routes/Home.tsx'
+import Repos from './routes/Repos.tsx'
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App/>,
-    children: [{
-      path: "/",
-      element: <Home/>,
-    }]
+    children: [
+      {
+        path: "/",
+        element: <Home/>,
+      },
+      {
+        path: "/repos/:username",
+        element: <Repos />,
+      }
+  ]
   }
 ])
 
