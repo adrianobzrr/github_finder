@@ -1,9 +1,11 @@
 import { useParams } from "react-router-dom"
-import classes from "./Repos.modules.css"
 import BackBtn from "../components/BackBtn";
 import { useEffect, useState } from "react";
-import { RepoProps } from "./Repo";
+import { RepoProps } from "./repo";
 import Loader from "../components/Loader";
+import Repo from "../components/Repo";
+
+import classes from "./Repos.module.css"
 
 const Repos = () => {
 
@@ -19,7 +21,11 @@ const Repos = () => {
         
         const data = await res.json();
 
-        setRepos(data);
+        let orderRepos = data.sort((a: RepoProps, b: RepoProps) => b.stargazers_count - a.forks_count)
+
+        orderRepos = orderRepos.slice(0, 5);
+        
+        setRepos(orderRepos);
 
         setIsLoading(false);
 
@@ -27,7 +33,7 @@ const Repos = () => {
 
       if(username){
         loadRepos(username);
-      };
+      }
     }, []);
 
     if(!repos && isLoading) {
@@ -35,14 +41,14 @@ const Repos = () => {
     }
 
   return (
-    <div>
+    <div className={classes.repos}>
         <BackBtn/>
         <h2>Explore os repositórios do usuário: {username}</h2>
         {repos && repos.length === 0 && <p>Não há repositórios!</p>}
         {repos && repos.length > 0 && (
-          <div>
+          <div className={classes.repos_container}>
             {repos.map((repo: RepoProps) => (
-              <p key={repo.name}>{repo.name}</p>
+              <Repo key={repo.name} {...repo} />
             ))}
           </div>
         )}
